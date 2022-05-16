@@ -1,0 +1,24 @@
+package com.example.trainingplanproject.ui.base
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
+
+abstract class BaseBindingFragment<VB : ViewBinding> : BaseFragment() {
+
+    private var _binding: VB? = null // This property is only valid between onCreateView and onDestroyView.
+    val binding get() = _binding!!
+    protected abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = bindingInflater(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
