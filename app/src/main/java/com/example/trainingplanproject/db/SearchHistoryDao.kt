@@ -16,9 +16,6 @@ interface SearchHistoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(word: SearchHistoryData): Long
 
-//    @Query("DELETE FROM search_history WHERE `query` = :query")
-//    fun delete(query: String)
-
     @Delete
     fun delete(word: SearchHistoryData)
 

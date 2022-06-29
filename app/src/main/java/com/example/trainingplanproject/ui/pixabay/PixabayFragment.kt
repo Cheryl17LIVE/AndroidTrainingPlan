@@ -1,8 +1,9 @@
 package com.example.trainingplanproject.ui.pixabay
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -39,8 +40,6 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
         }))
     }
 
-    private var pixabayLayoutStyle: PixabayLayoutStyle = PixabayLayoutStyle.GRID
-
     enum class PixabayLayoutStyle {
         GRID, LINEAR
     }
@@ -58,7 +57,7 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
     }
 
     private fun setLayoutStyle(style: PixabayLayoutStyle, @DrawableRes drawable: Int) {
-        pixabayLayoutStyle = style
+        viewModel.storeLayoutStyle(style)
         binding.styleControl.setImageResource(drawable)
         binding.recyclerView.layoutManager = when (style) {
             PixabayLayoutStyle.LINEAR -> LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -69,7 +68,10 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
 
     private fun initAdapter() {
         //picture
-        binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
+        when (viewModel.getLayoutStyle()) {
+            PixabayLayoutStyle.GRID.ordinal -> setLayoutStyle(PixabayLayoutStyle.GRID, R.drawable.ic_grid)
+            PixabayLayoutStyle.LINEAR.ordinal -> setLayoutStyle(PixabayLayoutStyle.LINEAR, R.drawable.ic_linear)
+        }
         pixabayAdapter.addLoadStateListener { loadStates ->
             when (loadStates.refresh) {
                 is LoadState.Loading -> loading()
@@ -86,6 +88,7 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initAction() {
         binding.swipeRefreshLayout.setOnRefreshListener { searchWord() }
         binding.searchAction.setOnClickListener {
@@ -100,31 +103,26 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
             return@setOnEditorActionListener false
         }
 
-        binding.searchEditText.setOnFocusChangeListener { view, isFocus ->
-            if (isFocus) {
+        binding.searchEditText.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
                 viewModel.getHistoryListData()
-                binding.rvSearch.visibility = View.VISIBLE
-            } else {
-                binding.rvSearch.visibility = View.GONE
+                isShowSearchHistory(true)
             }
-        }
-
-        binding.searchEditText.setOnClickListener {
-            viewModel.getHistoryListData()
-            binding.rvSearch.visibility = View.VISIBLE
+            return@setOnTouchListener false
         }
 
         binding.styleControl.setOnClickListener {
-            when (pixabayLayoutStyle) {
-                PixabayLayoutStyle.GRID -> setLayoutStyle(PixabayLayoutStyle.LINEAR, R.drawable.ic_linear)
-                PixabayLayoutStyle.LINEAR -> setLayoutStyle(PixabayLayoutStyle.GRID, R.drawable.ic_grid)
+            isShowSearchHistory(false)
+            when (viewModel.getLayoutStyle()) {
+                PixabayLayoutStyle.GRID.ordinal -> setLayoutStyle(PixabayLayoutStyle.LINEAR, R.drawable.ic_linear)
+                PixabayLayoutStyle.LINEAR.ordinal -> setLayoutStyle(PixabayLayoutStyle.GRID, R.drawable.ic_grid)
             }
         }
     }
 
     private fun searchWord() {
         hideKeyboard()
-        binding.rvSearch.visibility = View.GONE
+        isShowSearchHistory(false)
         val query = binding.searchEditText.text.toString()
         if (query.trim().isNotEmpty()) viewModel.storeSearchWord(query)
         lifecycleScope.launch {
@@ -132,6 +130,10 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
                 pixabayAdapter.submitData(pagingData)
             }
         }
+    }
+
+    private fun isShowSearchHistory(visible: Boolean) {
+        binding.rvSearch.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun initObserver() {

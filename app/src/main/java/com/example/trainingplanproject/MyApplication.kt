@@ -3,6 +3,9 @@ package com.example.trainingplanproject
 import android.app.Application
 import androidx.room.Room
 import com.example.trainingplanproject.db.AppDatabase
+import com.example.trainingplanproject.network.ApiService
+import com.example.trainingplanproject.network.OkHttpClientProvider
+import com.example.trainingplanproject.ui.pixabay.repository.PixabayRepository
 import com.example.trainingplanproject.ui.pixabay.viewmodel.PixabayViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -22,37 +25,28 @@ class MyApplication : Application() {
 
         startKoin {
             androidContext(this@MyApplication)
-            modules(listOf(viewModelModules, databaseModules))
+            modules(listOf(viewModelModules, apiModules, repositoryModules, databaseModules))
         }
     }
 
-    /*
-    val apiModules: Module = module {
+    private val apiModules: Module = module {
         single { get<OkHttpClientProvider>().createOkHttpClient() }
-        single { get<IApiProvider>().createPixabyApi() }
-        single<IApiProvider> { ApiProvider(get()) }
+        single { get<ApiService>().createPixabayService() }
+        single { ApiService(get()) }
         single { OkHttpClientProvider() }
     }
 
-    val repositoryModules = module {
-        factory<IPixabayRepository> { PixabayRepository(get()) }
+    private val repositoryModules = module {
+        single { PixabayRepository(get()) }
     }
-*/
+
     private val viewModelModules = module {
-        viewModel { PixabayViewModel(get()) }
+        viewModel { PixabayViewModel(get(), get(), get()) }
     }
 
     private val databaseModules: Module = module {
         single { AppDatabase.instance }
         single { get<AppDatabase>().searchHistoryDao() }
-//        single { Room.databaseBuilder(
-//            applicationContext,
-//            AppDatabase::class.java, "AppDatabase.db")
-//            .build() }
     }
 
-//    private val databaseModules: Module = module {
-//        single { get<AppDatabase>().searchWordDao() }
-//        single { AppDatabase.instance }
-//    }
 }
