@@ -27,22 +27,12 @@ import com.example.trainingplanproject.R
 
 @BindingAdapter("imageUrl")
 fun ImageView.glideLoadImg(imgUrl: String?) {
-    imgUrl?.let {
-        Glide.with(this.context)
-            .load(imgUrl)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.loading_animation)
-                    .error(R.drawable.ic_baseline_broken_image_24)
-            )
-            .into(this)
-    }
-}
-
-@BindingAdapter("imgLink")
-fun ImageView.setImgLink(url: String?) {
-    this.setOnClickListener {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        context.startActivity(browserIntent)
-    }
+    Glide.with(this.context)
+        .load(imgUrl)
+        .apply(
+            RequestOptions()
+                .placeholder(R.drawable.loading_animation)
+                .error(R.drawable.ic_baseline_broken_image_24)
+        )
+        .into(this)
 }

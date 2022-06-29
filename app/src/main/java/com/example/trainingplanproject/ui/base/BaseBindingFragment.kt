@@ -8,7 +8,7 @@ import androidx.viewbinding.ViewBinding
 
 abstract class BaseBindingFragment<VB : ViewBinding> : BaseFragment() {
 
-    private var _binding: VB? = null // This property is only valid between onCreateView and onDestroyView.
+    private var _binding: VB? = null
     val binding get() = _binding!!
     protected abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
 

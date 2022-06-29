@@ -1,7 +1,9 @@
 package com.example.trainingplanproject.ui.base
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import com.example.trainingplanproject.R
@@ -26,12 +28,23 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    /*关闭加载界面*/
     open fun hideLoading() {
         if (view == null) {
             Timber.d("loadingView不存在")
         } else {
             loadingView?.visibility = View.GONE
+        }
+    }
+
+    open fun hideKeyboard() {
+        try {
+            val inputMethodManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val focusedView = this.currentFocus
+            if (inputMethodManager.isActive && focusedView != null) {
+                inputMethodManager.hideSoftInputFromWindow(focusedView.windowToken, 0)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

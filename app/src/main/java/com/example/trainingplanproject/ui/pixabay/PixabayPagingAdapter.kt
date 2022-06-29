@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trainingplanproject.databinding.ItemImageBinding
 import com.example.trainingplanproject.network.model.pixabay.PixabayItem
 import com.example.trainingplanproject.util.glideLoadImg
-import com.example.trainingplanproject.util.setImgLink
 
 class PixabayPagingAdapter : PagingDataAdapter<PixabayItem, PixabayPagingAdapter.MyViewHolder>(diffCallback) {
 
@@ -29,9 +28,7 @@ class PixabayPagingAdapter : PagingDataAdapter<PixabayItem, PixabayPagingAdapter
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currChar = getItem(position)
-
         holder.binding.imageView.glideLoadImg(currChar?.previewURL)
-        holder.binding.imageView.setImgLink(currChar?.webformatURL)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

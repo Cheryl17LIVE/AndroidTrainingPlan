@@ -14,7 +14,7 @@ interface PixabayApiService {
     suspend fun getPixabayPicture(
         @Query("key") key: String ?= Constants.PIXABAY_API_KEY,
         @Query("q") query: String? = null,
-        @Query("category") category: String? = null, //backgrounds, fashion, nature, science, education, feelings, health, people, religion, places, animals, industry, computer, food, sports, transportation, travel, buildings, business, music
+//        @Query("category") category: String? = null, //backgrounds, fashion, nature, science, education, feelings, health, people, religion, places, animals, industry, computer, food, sports, transportation, travel, buildings, business, music
         @Query("page") page: Int? = null,
         @Query("per_page") per_page: Int? = 10,
     ): Response<PixabayResponse>

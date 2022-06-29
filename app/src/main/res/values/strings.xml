@@ -3,4 +3,5 @@
     <string name="header">header</string>
     <string name="no_data">no data</string>
     <string name="search">search</string>
+    <string name="retry">retry</string>
 </resources>

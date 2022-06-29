@@ -14,4 +14,8 @@ open class BaseFragment : Fragment() {
             (activity as BaseActivity).hideLoading()
     }
 
+    open fun hideKeyboard() {
+        if (activity is BaseActivity)
+            (activity as BaseActivity).hideKeyboard()
+    }
 }
