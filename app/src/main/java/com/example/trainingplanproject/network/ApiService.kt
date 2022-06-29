@@ -1,7 +1,6 @@
 package com.example.trainingplanproject.network
 
 import com.example.trainingplanproject.network.service.PixabayApiService
-import com.example.trainingplanproject.network.user.GitUserApiService
 import com.example.trainingplanproject.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

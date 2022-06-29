@@ -1,13 +1,12 @@
 package com.example.trainingplanproject.ui.pixabay
 
 import android.os.Bundle
-import android.view.KeyEvent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.DrawableRes
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,17 +14,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.trainingplanproject.R
 import com.example.trainingplanproject.databinding.FragmentPixabayBinding
 import com.example.trainingplanproject.ui.base.BaseBindingFragment
+import com.example.trainingplanproject.ui.pixabay.adapter.OnItemClickListener
+import com.example.trainingplanproject.ui.pixabay.adapter.PixabayPagingAdapter
+import com.example.trainingplanproject.ui.pixabay.adapter.SearchHistoryListAdapter
+import com.example.trainingplanproject.ui.pixabay.viewmodel.PixabayViewModel
 import kotlinx.coroutines.launch
-
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPixabayBinding =
         FragmentPixabayBinding::inflate
 
-    private val viewModel: PixabayViewModel by viewModels()
+    private val viewModel: PixabayViewModel by viewModel()
 
     private val pixabayAdapter by lazy { PixabayPagingAdapter() }
+
+    private val searchHistoryAdapter by lazy {
+        SearchHistoryListAdapter(OnItemClickListener({
+            binding.searchEditText.setText(it)
+            searchWord()
+        }, {
+            viewModel.deleteSearchWord(it)
+        }))
+    }
 
     private var pixabayLayoutStyle: PixabayLayoutStyle = PixabayLayoutStyle.GRID
 
@@ -56,12 +68,8 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
     }
 
     private fun initAdapter() {
+        //picture
         binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
-        binding.recyclerView.adapter = pixabayAdapter.withLoadStateHeaderAndFooter(
-            header = PixabayLoadStateAdapter(pixabayAdapter),
-            footer = PixabayLoadStateAdapter(pixabayAdapter)
-        )
-
         pixabayAdapter.addLoadStateListener { loadStates ->
             when (loadStates.refresh) {
                 is LoadState.Loading -> loading()
@@ -69,8 +77,12 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
             }
             binding.swipeRefreshLayout.isRefreshing = loadStates.refresh is LoadState.Loading
         }
-
+        binding.recyclerView.adapter = pixabayAdapter
         searchWord()
+
+        //search
+        binding.rvSearch.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        binding.rvSearch.adapter = searchHistoryAdapter
 
     }
 
@@ -78,16 +90,28 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
         binding.swipeRefreshLayout.setOnRefreshListener { searchWord() }
         binding.searchAction.setOnClickListener {
             searchWord()
-            hideKeyboard()
         }
 
         binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {searchWord()
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchWord()
-                hideKeyboard()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
+        }
+
+        binding.searchEditText.setOnFocusChangeListener { view, isFocus ->
+            if (isFocus) {
+                viewModel.getHistoryListData()
+                binding.rvSearch.visibility = View.VISIBLE
+            } else {
+                binding.rvSearch.visibility = View.GONE
+            }
+        }
+
+        binding.searchEditText.setOnClickListener {
+            viewModel.getHistoryListData()
+            binding.rvSearch.visibility = View.VISIBLE
         }
 
         binding.styleControl.setOnClickListener {
@@ -99,7 +123,10 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
     }
 
     private fun searchWord() {
+        hideKeyboard()
+        binding.rvSearch.visibility = View.GONE
         val query = binding.searchEditText.text.toString()
+        if (query.trim().isNotEmpty()) viewModel.storeSearchWord(query)
         lifecycleScope.launch {
             viewModel.searchListData(query).collect { pagingData ->
                 pixabayAdapter.submitData(pagingData)
@@ -108,15 +135,9 @@ class PixabayFragment : BaseBindingFragment<FragmentPixabayBinding>() {
     }
 
     private fun initObserver() {
-
-//        viewModel.loading.observe(viewLifecycleOwner) {
-//            if (it == true) loading() else hideLoading()
-//        }
-
-//        viewModel.gitUserList.observe(viewLifecycleOwner) {
-//            hideLoading()
-//            adapter.addFooterAndSubmitList(it)
-//        }
+        viewModel.historyList.observe(viewLifecycleOwner) {
+            searchHistoryAdapter.submitList(it)
+        }
     }
 
 

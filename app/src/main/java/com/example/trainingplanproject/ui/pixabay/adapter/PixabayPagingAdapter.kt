@@ -1,4 +1,4 @@
-package com.example.trainingplanproject.ui.pixabay
+package com.example.trainingplanproject.ui.pixabay.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -24,7 +24,6 @@ class PixabayPagingAdapter : PagingDataAdapter<PixabayItem, PixabayPagingAdapter
             }
         }
     }
-
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currChar = getItem(position)
