@@ -37,11 +37,11 @@ class MyApplication : Application() {
     }
 
     private val repositoryModules = module {
-        single { PixabayRepository(get()) }
+        single { PixabayRepository(get(), get()) }
     }
 
     private val viewModelModules = module {
-        viewModel { PixabayViewModel(get(), get(), get()) }
+        viewModel { PixabayViewModel(get(), get()) }
     }
 
     private val databaseModules: Module = module {

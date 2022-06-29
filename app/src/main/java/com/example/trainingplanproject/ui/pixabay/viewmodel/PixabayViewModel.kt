@@ -7,9 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.trainingplanproject.db.SearchHistoryDao
 import com.example.trainingplanproject.db.SearchHistoryData
-import com.example.trainingplanproject.network.ApiService
 import com.example.trainingplanproject.network.model.pixabay.PixabayItem
-import com.example.trainingplanproject.paging.PixabayPagingSource
 import com.example.trainingplanproject.ui.pixabay.PixabayFragment
 import com.example.trainingplanproject.ui.pixabay.repository.PixabayRepository
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +16,6 @@ import kotlinx.coroutines.launch
 
 class PixabayViewModel(
     private val searchHistoryDao: SearchHistoryDao,
-    private val apiService: ApiService,
     private val repo: PixabayRepository
 ) : ViewModel() {
 
@@ -61,7 +58,7 @@ class PixabayViewModel(
 
     fun searchListData(query: String? = null): Flow<PagingData<PixabayItem>> {
         val result = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-            PixabayPagingSource(apiService.createPixabayService(), query)
+            repo.getPagingSource(query)
         }.flow.cachedIn(viewModelScope)
         return result
     }

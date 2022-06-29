@@ -2,10 +2,12 @@ package com.example.trainingplanproject.ui.pixabay.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.paging.PagingSource
+import com.example.trainingplanproject.network.ApiService
+import com.example.trainingplanproject.paging.PixabayPagingSource
 import com.example.trainingplanproject.ui.pixabay.PixabayFragment
 
-class PixabayRepository(private val androidContext: Context)  {
-
+class PixabayRepository(private val androidContext: Context, private val apiService: ApiService)  {
     companion object {
         const val MY_SP = "MY_SP"
         const val LAYOUT_STYLE = "LAYOUT_STYLE"
@@ -23,4 +25,10 @@ class PixabayRepository(private val androidContext: Context)  {
                 apply()
             }
         }
+
+
+    fun getPagingSource(query: String?): PixabayPagingSource {
+        return PixabayPagingSource(apiService.createPixabayService(), query)
+    }
+
 }
