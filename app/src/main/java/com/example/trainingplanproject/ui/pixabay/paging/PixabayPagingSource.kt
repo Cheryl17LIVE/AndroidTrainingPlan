@@ -1,4 +1,4 @@
-package com.example.trainingplanproject.paging
+package com.example.trainingplanproject.ui.pixabay.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

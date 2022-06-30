@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.example.trainingplanproject.db.AppDatabase
 import com.example.trainingplanproject.network.ApiService
 import com.example.trainingplanproject.network.OkHttpClientProvider
-import com.example.trainingplanproject.ui.pixabay.repository.PixabayRepository
+import com.example.trainingplanproject.repository.PixabayRepository
 import com.example.trainingplanproject.ui.pixabay.viewmodel.PixabayViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
