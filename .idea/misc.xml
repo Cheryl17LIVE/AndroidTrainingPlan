@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable-v24/loading_img.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable/ic_baseline_broken_image_24.xml" value="0.2155" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2910481770833334" />
+        <entry key="app/src/main/res/layout/fragment_pixabay.xml" value="0.3614583333333333" />
+        <entry key="app/src/main/res/layout/fragment_user_list.xml" value="0.3591485507246377" />
+        <entry key="app/src/main/res/layout/item_git_user.xml" value="0.28856506347656247" />
+        <entry key="app/src/main/res/layout/item_git_user_header.xml" value="0.2677083333333333" />
+        <entry key="app/src/main/res/layout/item_image.xml" value="0.3614583333333333" />
+        <entry key="app/src/main/res/layout/item_no_data.xml" value="0.2677083333333333" />
+        <entry key="app/src/main/res/layout/item_search.xml" value="0.3614583333333333" />
+        <entry key="app/src/main/res/layout/layout_loading.xml" value="0.3614583333333333" />
+        <entry key="app/src/main/res/layout/network_state_item.xml" value="0.3558974358974359" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

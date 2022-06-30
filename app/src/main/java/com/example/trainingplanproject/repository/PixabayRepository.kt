@@ -1,10 +1,9 @@
-package com.example.trainingplanproject.ui.pixabay.repository
+package com.example.trainingplanproject.repository
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.paging.PagingSource
 import com.example.trainingplanproject.network.ApiService
-import com.example.trainingplanproject.paging.PixabayPagingSource
+import com.example.trainingplanproject.ui.pixabay.paging.PixabayPagingSource
 import com.example.trainingplanproject.ui.pixabay.PixabayFragment
 
 class PixabayRepository(private val androidContext: Context, private val apiService: ApiService)  {

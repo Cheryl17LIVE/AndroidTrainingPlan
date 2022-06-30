@@ -9,7 +9,7 @@ import com.example.trainingplanproject.db.SearchHistoryDao
 import com.example.trainingplanproject.db.SearchHistoryData
 import com.example.trainingplanproject.network.model.pixabay.PixabayItem
 import com.example.trainingplanproject.ui.pixabay.PixabayFragment
-import com.example.trainingplanproject.ui.pixabay.repository.PixabayRepository
+import com.example.trainingplanproject.repository.PixabayRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
